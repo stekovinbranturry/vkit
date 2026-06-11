@@ -5,23 +5,23 @@ import {pipeline} from 'node:stream/promises';
 import {Readable} from 'node:stream';
 
 export async function downloadVsixToFile(
-  url: string,
-  destPath: string,
+	url: string,
+	destPath: string,
 ): Promise<void> {
-  const response = await fetch(url);
+	const response = await fetch(url);
 
-  if (!response.ok) {
-    throw new Error(`下载失败（HTTP ${response.status}）`);
-  }
+	if (!response.ok) {
+		throw new Error(`下载失败（HTTP ${response.status}）`);
+	}
 
-  if (!response.body) {
-    throw new Error('下载失败：响应体为空');
-  }
+	if (!response.body) {
+		throw new Error('下载失败：响应体为空');
+	}
 
-  await mkdir(path.dirname(destPath), {recursive: true});
+	await mkdir(path.dirname(destPath), {recursive: true});
 
-  const nodeStream = Readable.fromWeb(
-    response.body as Parameters<typeof Readable.fromWeb>[0],
-  );
-  await pipeline(nodeStream, createWriteStream(destPath));
+	const nodeStream = Readable.fromWeb(
+		response.body as Parameters<typeof Readable.fromWeb>[0],
+	);
+	await pipeline(nodeStream, createWriteStream(destPath));
 }

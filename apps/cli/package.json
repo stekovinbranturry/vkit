@@ -42,7 +42,8 @@
   },
   "ava": {
     "extensions": {"ts": "module", "tsx": "module"},
-    "nodeArguments": ["--loader=ts-node/esm"]
+    "nodeArguments": ["--loader=ts-node/esm"],
+    "environmentVariables": {"TS_NODE_TRANSPILE_ONLY": "true"}
   },
   "prettier": "@vdemedes/prettier-config"
 }

@@ -30,6 +30,7 @@
   },
   "devDependencies": {
     "@sindresorhus/tsconfig": "^3.0.1",
+    "@types/node": "^25",
     "@types/react": "^18.0.32",
     "@typescript/native-preview": "latest",
     "@vdemedes/prettier-config": "^2.0.1",
@@ -42,8 +43,7 @@
   },
   "ava": {
     "extensions": {"ts": "module", "tsx": "module"},
-    "nodeArguments": ["--loader=ts-node/esm"],
-    "environmentVariables": {"TS_NODE_TRANSPILE_ONLY": "true"}
+    "nodeArguments": ["--loader=ts-node/esm"]
   },
   "prettier": "@vdemedes/prettier-config"
 }

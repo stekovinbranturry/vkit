@@ -3,5 +3,11 @@
 	"compilerOptions": {
 		"outDir": "dist"
 	},
-	"include": ["source"]
+	"ts-node": {
+		"compilerOptions": {
+			"module": "esnext",
+			"moduleResolution": "bundler"
+		}
+	},
+	"include": ["source", "test.tsx"]
 }

@@ -40,7 +40,7 @@
   },
   "publishConfig": {
     "access": "public",
-    "provenance": false
+    "provenance": true
   },
   "devDependencies": {
     "@sindresorhus/tsconfig": "^3.0.1",

@@ -1,5 +1,11 @@
 # vtools-core
 
+## 0.0.2
+
+### Patch Changes
+
+- 133a20f: Publish under the `@v-kit` scope; the CLI binary is now `vkit`.
+
 ## 0.0.1
 
 ### Patch Changes

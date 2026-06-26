@@ -3,9 +3,11 @@
 	"compilerOptions": {
 		"outDir": "dist",
 		"module": "esnext",
-		"moduleResolution": "bundler"
+		"moduleResolution": "bundler",
+		"types": ["node", "react"]
 	},
 	"ts-node": {
+		"experimentalSpecifierResolution": "node",
 		"compilerOptions": {
 			"module": "esnext",
 			"moduleResolution": "bundler"

@@ -95,7 +95,7 @@ export default function InstallPrompt({vsixPath, onDone}: Props) {
 	if (editors.length === 0) {
 		return (
 			<Box marginTop={1} flexDirection="column">
-				<Text color="yellow">未找到 cursor 或 code 命令，请手动安装。</Text>
+				<Text color="yellow">未找到 cursor 或 code 命令，请手动安装</Text>
 			</Box>
 		);
 	}

@@ -13,7 +13,7 @@ export async function promptInstallVsix(vsixPath: string): Promise<void> {
 
 	if (editors.length === 0) {
 		console.log(
-			chalk.yellow('\n  ⚠ 未找到 cursor 或 code 命令，请手动安装扩展。\n'),
+			chalk.yellow('\n  ⚠ 未找到 cursor 或 code 命令，请手动安装扩展\n'),
 		);
 		return;
 	}
@@ -28,7 +28,7 @@ export async function promptInstallVsix(vsixPath: string): Promise<void> {
 	});
 
 	if (selected.length === 0) {
-		console.log(chalk.dim('\n  已跳过安装。\n'));
+		console.log(chalk.dim('\n  已跳过安装\n'));
 		return;
 	}
 

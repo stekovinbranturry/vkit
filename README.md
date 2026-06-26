@@ -1,4 +1,4 @@
-# vtools
+# vkit
 
 Personal developer tools, available both as a CLI and a Chrome extension.
 
@@ -6,7 +6,7 @@ Personal developer tools, available both as a CLI and a Chrome extension.
 
 - `@v-kit/core` — shared VS Code Marketplace logic (parse/resolve/build URL).
 - `@v-kit/cli` — Ink-based terminal app. Binary: `vkit`.
-- `vtools-extension` — Chrome new-tab dashboard (Vite + React + Tailwind).
+- `vkit-extension` — Chrome new-tab dashboard (Vite + React + Tailwind).
 
 ## Develop
 
@@ -68,6 +68,6 @@ pnpm release             # build + publish (requires npm login)
 ## Extension
 
 ```sh
-pnpm --filter vtools-extension build
+pnpm --filter vkit-extension build
 # load apps/extension/dist as an unpacked extension in Chrome
 ```

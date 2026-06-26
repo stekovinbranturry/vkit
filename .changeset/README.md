@@ -2,7 +2,7 @@
 
 This monorepo uses [Changesets](https://github.com/changesets/changesets) to version and publish packages.
 
-When your PR includes user-facing changes to `vtools-core` or `vtools`, add a changeset:
+When your PR includes user-facing changes to `@v-kit/core` or `@v-kit/cli`, add a changeset:
 
 ```sh
 pnpm changeset

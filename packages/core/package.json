@@ -1,11 +1,11 @@
 {
   "name": "@v-kit/core",
   "version": "0.1.1",
-  "description": "Shared VS Code Marketplace logic for vtools (parse, resolve, build download URL).",
+  "description": "Shared VS Code Marketplace logic for vkit (parse, resolve, build download URL).",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/stekovinbranturry/vtools.git",
+    "url": "git+https://github.com/stekovinbranturry/vkit.git",
     "directory": "packages/core"
   },
   "publishConfig": {

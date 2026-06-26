@@ -1,4 +1,4 @@
-# vtools-core
+# @v-kit/core
 
 ## 0.1.1
 

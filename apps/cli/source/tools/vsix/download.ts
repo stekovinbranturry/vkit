@@ -54,7 +54,7 @@ export async function runVsixDownload(
 		return {
 			success: false,
 			message:
-				'无法解析输入。请使用 "publisher.extension" 或完整的 Marketplace 链接。',
+				'无法解析输入。请使用 "publisher.extension" 或完整的 Marketplace 链接',
 		};
 	}
 
@@ -96,7 +96,7 @@ export async function runVsixDownload(
 	} catch (error) {
 		return {
 			success: false,
-			message: error instanceof Error ? error.message : '下载失败，请重试。',
+			message: error instanceof Error ? error.message : '下载失败，请重试',
 		};
 	}
 }

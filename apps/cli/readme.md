@@ -1,6 +1,6 @@
 # @v-kit/cli
 
-![vkit dashboard](https://raw.githubusercontent.com/stekovinbranturry/vtools/main/images/dashboard.png)
+![vkit dashboard](https://raw.githubusercontent.com/stekovinbranturry/vkit/main/images/dashboard.png)
 
 终端里的开发者工具箱（Your terminal dev toolbox）。
 
@@ -21,7 +21,7 @@ npm install -g @v-kit/cli
 
 安装扩展需要系统里能调用 **`cursor`** 或 **`code`** 命令。请在对应编辑器中打开命令面板，执行 **「Shell Command: Install 'cursor' command in PATH」**（Cursor）或 **「Shell Command: Install 'code' command in PATH」**（VS Code）。
 
-![在编辑器中安装 cursor / code 命令](https://raw.githubusercontent.com/stekovinbranturry/vtools/main/images/install-command.png)
+![在编辑器中安装 cursor / code 命令](https://raw.githubusercontent.com/stekovinbranturry/vkit/main/images/install-command.png)
 
 安装完成后，在终端执行 `cursor --version` 或 `code --version` 确认可用。
 
@@ -43,5 +43,5 @@ vkit vsix ms-python.python --out ./extensions/
 
 ## 链接
 
-- [GitHub](https://github.com/stekovinbranturry/vtools)
-- [问题反馈](https://github.com/stekovinbranturry/vtools/issues)
+- [GitHub](https://github.com/stekovinbranturry/vkit)
+- [问题反馈](https://github.com/stekovinbranturry/vkit/issues)

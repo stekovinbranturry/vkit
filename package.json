@@ -1,9 +1,9 @@
 {
-  "name": "vtools",
+  "name": "vkit",
   "private": true,
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/stekovinbranturry/vtools.git"
+    "url": "git+https://github.com/stekovinbranturry/vkit.git"
   },
   "scripts": {
     "build": "turbo run build",

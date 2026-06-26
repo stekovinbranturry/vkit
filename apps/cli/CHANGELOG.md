@@ -1,5 +1,13 @@
 # vtools
 
+## 0.0.1
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @v-kit/core@0.0.1
+
 ## 0.0.2
 
 ### Patch Changes

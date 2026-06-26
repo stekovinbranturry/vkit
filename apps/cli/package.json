@@ -1,6 +1,6 @@
 {
   "name": "vtools",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Ink-based terminal app for downloading VS Code extensions (.vsix). Binary: vtools.",
   "license": "MIT",
   "repository": {

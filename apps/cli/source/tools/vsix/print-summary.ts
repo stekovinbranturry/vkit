@@ -1,6 +1,6 @@
 import chalk from 'chalk';
-import {formatBytes} from '../../lib/format.js';
-import type {DownloadResult} from './download.js';
+import {formatBytes} from '../../lib/format';
+import type {DownloadResult} from './download';
 
 export function printVsixHeader(): void {
 	console.log();

@@ -3,17 +3,17 @@ import React from 'react';
 import {render} from 'ink';
 import meow from 'meow';
 import ora from 'ora';
-import App from './app.js';
-import {runVsixDownload} from './tools/vsix/download.js';
-import {promptInstallVsix} from './tools/vsix/prompt-install.js';
+import App from './app';
+import {runVsixDownload} from './tools/vsix/download';
+import {promptInstallVsix} from './tools/vsix/prompt-install';
 import {
 	printVsixError,
 	printVsixHeader,
 	printVsixSuccess,
-} from './tools/vsix/print-summary.js';
-import VsixApp from './tools/vsix/VsixApp.js';
-import SyncApp from './tools/sync/SyncApp.js';
-import {checkForUpdates} from './update-check.js';
+} from './tools/vsix/print-summary';
+import VsixApp from './tools/vsix/VsixApp';
+import SyncApp from './tools/sync/SyncApp';
+import {checkForUpdates} from './update-check';
 
 const cli = meow(
 	`

@@ -6,7 +6,7 @@ import {
 	findEditorClis,
 	getEditorLabel,
 	installVsixToEditors,
-} from './install.js';
+} from './install';
 
 export async function promptInstallVsix(vsixPath: string): Promise<void> {
 	const editors = findEditorClis();

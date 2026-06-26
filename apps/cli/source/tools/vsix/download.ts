@@ -7,7 +7,7 @@ import {
 	buildDownloadUrl,
 	buildVsixFilename,
 } from '@v-kit/core';
-import {downloadVsixToFile} from '../../lib/download-file.js';
+import {downloadVsixToFile} from '../../lib/download-file';
 
 export type DownloadOptions = {
 	input: string;

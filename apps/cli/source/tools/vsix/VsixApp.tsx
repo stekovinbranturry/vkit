@@ -2,9 +2,9 @@ import React, {useState} from 'react';
 import {Box, Text, useInput} from 'ink';
 import TextInput from 'ink-text-input';
 import Spinner from 'ink-spinner';
-import InstallPrompt from './InstallPrompt.js';
-import {type DownloadResult, runVsixDownload} from './download.js';
-import KeyHints from '../../components/KeyHints.js';
+import InstallPrompt from './InstallPrompt';
+import {type DownloadResult, runVsixDownload} from './download';
+import KeyHints from '../../components/KeyHints';
 
 type Status = 'idle' | 'working' | 'done' | 'error';
 

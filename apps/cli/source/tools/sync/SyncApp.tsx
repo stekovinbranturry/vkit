@@ -1,8 +1,8 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {Box, Text, useInput} from 'ink';
 import Spinner from 'ink-spinner';
-import {findEditorClis, getEditorLabel} from '../vsix/install.js';
-import KeyHints from '../../components/KeyHints.js';
+import {findEditorClis, getEditorLabel} from '../vsix/install';
+import KeyHints from '../../components/KeyHints';
 import {
 	cleanupTempDir,
 	computeSyncCandidatesAsync,
@@ -10,7 +10,7 @@ import {
 	syncExtension,
 	type SyncCandidate,
 	type SyncItemResult,
-} from './sync.js';
+} from './sync';
 
 const SOURCE = 'code' as const;
 const TARGET = 'cursor' as const;

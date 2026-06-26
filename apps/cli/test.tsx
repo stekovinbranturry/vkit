@@ -1,5 +1,5 @@
 import test from 'ava';
-import {runVsixDownload} from './source/tools/vsix/download.js';
+import {runVsixDownload} from './source/tools/vsix/download';
 
 test('runVsixDownload rejects unparseable input', async t => {
 	const result = await runVsixDownload({input: 'not-valid'});

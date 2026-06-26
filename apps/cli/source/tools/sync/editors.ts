@@ -1,5 +1,5 @@
 import {execa, execaSync} from 'execa';
-import type {EditorCli} from '../vsix/install.js';
+import type {EditorCli} from '../vsix/install';
 
 export type InstalledExtension = {
 	id: string;

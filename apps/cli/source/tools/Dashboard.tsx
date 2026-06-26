@@ -3,10 +3,10 @@ import {Box, Text, useApp, useInput} from 'ink';
 import SelectInput from 'ink-select-input';
 import Gradient from 'ink-gradient';
 import BigText from 'ink-big-text';
-import {tools} from './registry.js';
-import VsixApp from './vsix/VsixApp.js';
-import SyncApp from './sync/SyncApp.js';
-import KeyHints from '../components/KeyHints.js';
+import {tools} from './registry';
+import VsixApp from './vsix/VsixApp';
+import SyncApp from './sync/SyncApp';
+import KeyHints from '../components/KeyHints';
 
 function Indicator({isSelected}: {isSelected?: boolean}) {
 	return <Text color="cyan">{isSelected ? '❯' : ' '} </Text>;

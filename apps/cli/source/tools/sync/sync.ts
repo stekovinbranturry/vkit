@@ -1,13 +1,13 @@
 import {mkdtemp, rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import path from 'node:path';
-import {runVsixDownload} from '../vsix/download.js';
-import {installVsix, type EditorCli} from '../vsix/install.js';
+import {runVsixDownload} from '../vsix/download';
+import {installVsix, type EditorCli} from '../vsix/install';
 import {
 	listInstalledExtensions,
 	listInstalledExtensionsAsync,
 	type InstalledExtension,
-} from './editors.js';
+} from './editors';
 
 export type SyncCandidate = {
 	id: string;

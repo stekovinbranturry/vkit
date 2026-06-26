@@ -6,7 +6,7 @@ import {
 	findEditorClis,
 	getEditorLabel,
 	installVsixToEditors,
-} from './install.js';
+} from './install';
 
 type Props = {
 	vsixPath: string;

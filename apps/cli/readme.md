@@ -1,4 +1,4 @@
-# @ztools/cli
+# vtools
 
 Ink-based CLI port of the [devtools-newtab](https://github.com/) browser extension. Use your dev tools from the terminal.
 
@@ -15,21 +15,21 @@ npm link
 **Interactive dashboard** — pick a tool from the menu:
 
 ```bash
-ztools
+vtools
 ```
 
 **VSIX downloader (script mode)**:
 
 ```bash
-ztools vsix ms-python.python
-ztools vsix esbenp.prettier-vscode --version 11.0.0
-ztools vsix ms-python.python --out ./extensions/
+vtools vsix ms-python.python
+vtools vsix esbenp.prettier-vscode --version 11.0.0
+vtools vsix ms-python.python --out ./extensions/
 ```
 
 **VSIX downloader (interactive form)**:
 
 ```bash
-ztools vsix
+vtools vsix
 ```
 
 ## Tools

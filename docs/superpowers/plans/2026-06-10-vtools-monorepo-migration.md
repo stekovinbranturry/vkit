@@ -1,10 +1,10 @@
-# ztools Monorepo Migration Implementation Plan
+# vtools Monorepo Migration Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Migrate the Ink CLI (`my-ink-cli`) and Chrome extension (`devtools-newtab`) into the `ztools` Turborepo, extract shared VSIX logic into `@ztools/core`, and rename everything to `ztools`.
+**Goal:** Migrate the Ink CLI (`my-ink-cli`) and Chrome extension (`devtools-newtab`) into the `vtools` Turborepo, extract shared VSIX logic into `vtools-core`, and rename everything to `vtools`.
 
-**Architecture:** pnpm + Turborepo monorepo. `packages/core` (`@ztools/core`) holds environment-agnostic Marketplace logic built with tsdown. `apps/cli` (`@ztools/cli`, binary `ztools`) and `apps/extension` (`@ztools/extension`) both depend on `@ztools/core` via `workspace:*`; each keeps its environment-specific download path.
+**Architecture:** pnpm + Turborepo monorepo. `packages/core` (`vtools-core`) holds environment-agnostic Marketplace logic built with tsdown. `apps/cli` (`vtools`, binary `vtools`) and `apps/extension` (`vtools-extension`) both depend on `vtools-core` via `workspace:*`; each keeps its environment-specific download path.
 
 **Tech Stack:** pnpm workspaces, Turborepo, tsdown (Rolldown), tsgo (type-check), Ink 4 (CLI), Vite + React + Tailwind (extension), ava (CLI tests).
 
@@ -12,19 +12,19 @@
 - CLI: `/Users/kylan.zhang/me/my-ink-cli`
 - Extension: `/Users/kylan.zhang/blofin/devtools-newtab`
 
-**Monorepo root:** `/Users/kylan.zhang/me/ztools`
+**Monorepo root:** `/Users/kylan.zhang/me/vtools`
 
 ---
 
 ## Task 1: Initialize repo and clean scaffold
 
 **Files:**
-- Modify: `/Users/kylan.zhang/me/ztools/package.json`
+- Modify: `/Users/kylan.zhang/me/vtools/package.json`
 - Delete: `apps/web/`, `apps/docs/`, `packages/ui/`
 
 - [ ] **Step 1: Init git**
 
-Run (in `/Users/kylan.zhang/me/ztools`):
+Run (in `/Users/kylan.zhang/me/vtools`):
 ```bash
 git init
 ```
@@ -40,18 +40,18 @@ Expected: directories gone; `ls apps` shows nothing, `ls packages` shows `eslint
 
 - [ ] **Step 3: Rename root package**
 
-Modify `package.json` line 2: change `"name": "my-turborepo"` to `"name": "ztools"`.
+Modify `package.json` line 2: change `"name": "my-turborepo"` to `"name": "vtools"`.
 
 - [ ] **Step 4: Commit**
 
 ```bash
 git add -A
-git commit -m "chore: init ztools repo, drop create-turbo demos"
+git commit -m "chore: init vtools repo, drop create-turbo demos"
 ```
 
 ---
 
-## Task 2: Create @ztools/core package
+## Task 2: Create vtools-core package
 
 **Files:**
 - Create: `packages/core/package.json`
@@ -64,7 +64,7 @@ git commit -m "chore: init ztools repo, drop create-turbo demos"
 
 ```json
 {
-  "name": "@ztools/core",
+  "name": "vtools-core",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -213,7 +213,7 @@ export async function resolveExtension(
   };
 
   const response = await fetch(
-    `${MARKETPLACE_ORIGIN}/_apis/public/gallery/extensionquery`,
+    `${MARKETPLACE_ORIGIN}/_apis/public/galleryvtools-extensionquery`,
     {
       method: 'POST',
       headers: {
@@ -270,7 +270,7 @@ export type {ExtensionRef, ResolvedExtension} from './marketplace.js';
 Run (in repo root):
 ```bash
 pnpm install
-pnpm --filter @ztools/core build
+pnpm --filter vtools-core build
 ```
 Expected: `packages/core/dist/index.js` and `packages/core/dist/index.d.ts` exist.
 
@@ -278,17 +278,17 @@ Expected: `packages/core/dist/index.js` and `packages/core/dist/index.d.ts` exis
 
 ```bash
 git add -A
-git commit -m "feat(core): add @ztools/core shared marketplace logic"
+git commit -m "feat(core): add vtools-core shared marketplace logic"
 ```
 
 ---
 
-## Task 3: Migrate CLI into apps/cli (@ztools/cli)
+## Task 3: Migrate CLI into apps/cli (vtools)
 
 **Files:**
 - Create: `apps/cli/` (copied tree from `my-ink-cli`, excluding `node_modules`, `dist`)
 - Modify: `apps/cli/package.json`
-- Modify: `apps/cli/source/tools/vsix/download.ts:1-10` (import from `@ztools/core`, keep local `downloadVsixToFile`)
+- Modify: `apps/cli/source/tools/vsix/download.ts:1-10` (import from `vtools-core`, keep local `downloadVsixToFile`)
 - Delete: `apps/cli/source/lib/marketplace.ts`
 - Create: `apps/cli/source/lib/download-file.ts`
 - Create: `apps/cli/tsdown.config.ts`
@@ -303,17 +303,17 @@ mkdir -p apps/cli
 rsync -a --exclude node_modules --exclude dist --exclude package-lock.json \
   /Users/kylan.zhang/me/my-ink-cli/ apps/cli/
 ```
-Expected: `apps/cli/source/cli.tsx` exists; no `node_modules` copied.
+Expected: `apps/cli/sourcevtools.tsx` exists; no `node_modules` copied.
 
 - [ ] **Step 2: Replace `apps/cli/package.json`**
 
 ```json
 {
-  "name": "@ztools/cli",
+  "name": "vtools",
   "version": "0.0.0",
   "license": "MIT",
   "bin": {
-    "ztools": "dist/cli.js"
+    "vtools": "distvtools.js"
   },
   "type": "module",
   "engines": {
@@ -327,7 +327,7 @@ Expected: `apps/cli/source/cli.tsx` exists; no `node_modules` copied.
   },
   "files": ["dist"],
   "dependencies": {
-    "@ztools/core": "workspace:*",
+    "vtools-core": "workspace:*",
     "@inquirer/prompts": "^7.0.0",
     "chalk": "^5.2.0",
     "ink": "^4.1.0",
@@ -364,7 +364,7 @@ Note: drop `xo` (its `eslint-config-xo-react` pulls an old ESLint that conflicts
 import {defineConfig} from 'tsdown';
 
 export default defineConfig({
-  entry: ['source/cli.tsx'],
+  entry: ['sourcevtools.tsx'],
   format: ['esm'],
   platform: 'node',
   dts: false,
@@ -373,7 +373,7 @@ export default defineConfig({
 });
 ```
 
-The source file `source/cli.tsx` begins with `#!/usr/bin/env node`; tsdown preserves the shebang of the entry file. After build, verify `dist/cli.js` starts with `#!/usr/bin/env node` (see Step 8).
+The source file `sourcevtools.tsx` begins with `#!/usr/bin/env node`; tsdown preserves the shebang of the entry file. After build, verify `distvtools.js` starts with `#!/usr/bin/env node` (see Step 8).
 
 - [ ] **Step 4: Create `apps/cli/source/lib/download-file.ts`**
 
@@ -429,7 +429,7 @@ import {
   resolveExtension,
   buildDownloadUrl,
   buildVsixFilename,
-} from '@ztools/core';
+} from 'vtools-core';
 import {downloadVsixToFile} from '../../lib/download-file.js';
 ```
 
@@ -441,14 +441,14 @@ Run (repo root):
 ```bash
 pnpm install
 ```
-Expected: `@ztools/cli` resolves `@ztools/core` via workspace link (no error).
+Expected: `vtools` resolves `vtools-core` via workspace link (no error).
 
 - [ ] **Step 8: Build CLI and verify shebang**
 
 Run:
 ```bash
-pnpm --filter @ztools/cli build
-head -1 apps/cli/dist/cli.js
+pnpm --filter vtools build
+head -1 apps/cli/distvtools.js
 ```
 Expected: build succeeds; first line is `#!/usr/bin/env node`. If the shebang is missing, add to `tsdown.config.ts`: `outputOptions: {banner: '#!/usr/bin/env node'}` and rebuild.
 
@@ -456,26 +456,26 @@ Expected: build succeeds; first line is `#!/usr/bin/env node`. If the shebang is
 
 Run:
 ```bash
-node apps/cli/dist/cli.js --help
+node apps/cli/distvtools.js --help
 ```
-Expected: prints the usage block including `$ ztools vsix <extension>`.
+Expected: prints the usage block including `$ vtools vsix <extension>`.
 
 - [ ] **Step 10: Commit**
 
 ```bash
 git add -A
-git commit -m "feat(cli): migrate Ink CLI to apps/cli using @ztools/core, rename bin to ztools"
+git commit -m "feat(cli): migrate Ink CLI to apps/cli using vtools-core, rename bin to vtools"
 ```
 
 ---
 
-## Task 4: Migrate extension into apps/extension (@ztools/extension)
+## Task 4: Migrate extension into apps/extension (vtools-extension)
 
 **Files:**
 - Create: `apps/extension/` (copied tree from `devtools-newtab`, excluding `node_modules`, `dist`)
 - Modify: `apps/extension/package.json`
-- Modify: `apps/extension/src/lib/marketplace.ts` (keep only `downloadVsix`; re-export rest from `@ztools/core`)
-- Modify: `apps/extension/src/tools/vsix/VsixDownloader.tsx:1-9` (import from `@ztools/core` + local download)
+- Modify: `apps/extension/src/lib/marketplace.ts` (keep only `downloadVsix`; re-export rest from `vtools-core`)
+- Modify: `apps/extension/src/tools/vsix/VsixDownloader.tsx:1-9` (import from `vtools-core` + local download)
 
 - [ ] **Step 1: Copy extension source tree**
 
@@ -489,11 +489,11 @@ Expected: `apps/extension/src/App.tsx`, `apps/extension/public/manifest.json`, `
 
 - [ ] **Step 2: Update `apps/extension/package.json`**
 
-Set `"name": "@ztools/extension"` and add the core dependency. Merge into the existing file (keep existing scripts `dev`/`build`/`preview` and all existing dependencies/devDependencies):
+Set `"name": "vtools-extension"` and add the core dependency. Merge into the existing file (keep existing scripts `dev`/`build`/`preview` and all existing dependencies/devDependencies):
 
 ```json
 {
-  "name": "@ztools/extension",
+  "name": "vtools-extension",
   "private": true,
   "version": "0.1.0",
   "type": "module",
@@ -503,7 +503,7 @@ Set `"name": "@ztools/extension"` and add the core dependency. Merge into the ex
     "preview": "vite preview"
   },
   "dependencies": {
-    "@ztools/core": "workspace:*",
+    "vtools-core": "workspace:*",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   }
@@ -514,7 +514,7 @@ Keep the existing `devDependencies` block from the copied file (`@tailwindcss/vi
 
 - [ ] **Step 3: Rewrite `apps/extension/src/lib/marketplace.ts`**
 
-Replace the entire file. Re-export shared logic from `@ztools/core`, keep only the browser-specific `downloadVsix`:
+Replace the entire file. Re-export shared logic from `vtools-core`, keep only the browser-specific `downloadVsix`:
 
 ```ts
 export {
@@ -522,8 +522,8 @@ export {
   resolveExtension,
   buildDownloadUrl,
   buildVsixFilename,
-} from '@ztools/core';
-export type {ExtensionRef, ResolvedExtension} from '@ztools/core';
+} from 'vtools-core';
+export type {ExtensionRef, ResolvedExtension} from 'vtools-core';
 
 /**
  * Triggers the download via chrome.downloads, with an anchor-click dev fallback.
@@ -562,26 +562,26 @@ Run (repo root):
 ```bash
 pnpm install
 ```
-Expected: `@ztools/extension` links `@ztools/core`.
+Expected: `vtools-extension` links `vtools-core`.
 
 - [ ] **Step 5: Build extension**
 
 Run:
 ```bash
-pnpm --filter @ztools/extension build
+pnpm --filter vtools-extension build
 ```
-Expected: `apps/extension/dist/` produced with `index.html`, `manifest.json` (from `public/`), and JS assets. No TS errors from the `@ztools/core` import.
+Expected: `apps/extension/dist/` produced with `index.html`, `manifest.json` (from `public/`), and JS assets. No TS errors from the `vtools-core` import.
 
 - [ ] **Step 6: Commit**
 
 ```bash
 git add -A
-git commit -m "feat(extension): migrate Chrome extension to apps/extension using @ztools/core"
+git commit -m "feat(extension): migrate Chrome extension to apps/extension using vtools-core"
 ```
 
 ---
 
-## Task 5: Move pure-function tests into @ztools/core
+## Task 5: Move pure-function tests into vtools-core
 
 **Files:**
 - Create: `packages/core/test/marketplace.test.ts`
@@ -644,7 +644,7 @@ test('buildDownloadUrl and buildVsixFilename', t => {
 
 Run:
 ```bash
-pnpm --filter @ztools/core test
+pnpm --filter vtools-core test
 ```
 Expected: 4 tests pass.
 
@@ -667,7 +667,7 @@ test('runVsixDownload rejects unparseable input', async t => {
 
 Run:
 ```bash
-pnpm --filter @ztools/cli test
+pnpm --filter vtools test
 ```
 Expected: the test passes (no network: `parseExtensionInput` returns null before any fetch).
 
@@ -675,7 +675,7 @@ Expected: the test passes (no network: `parseExtensionInput` returns null before
 
 ```bash
 git add -A
-git commit -m "test(core): move marketplace pure-fn tests to @ztools/core"
+git commit -m "test(core): move marketplace pure-fn tests to vtools-core"
 ```
 
 ---
@@ -683,9 +683,9 @@ git commit -m "test(core): move marketplace pure-fn tests to @ztools/core"
 ## Task 6: Wire turbo.json and root scripts
 
 **Files:**
-- Modify: `/Users/kylan.zhang/me/ztools/turbo.json`
-- Modify: `/Users/kylan.zhang/me/ztools/package.json` (root scripts)
-- Modify: `/Users/kylan.zhang/me/ztools/README.md`
+- Modify: `/Users/kylan.zhang/me/vtools/turbo.json`
+- Modify: `/Users/kylan.zhang/me/vtools/package.json` (root scripts)
+- Modify: `/Users/kylan.zhang/me/vtools/README.md`
 
 - [ ] **Step 1: Replace `turbo.json`**
 
@@ -736,7 +736,7 @@ Run (repo root):
 ```bash
 pnpm build
 ```
-Expected: `@ztools/core`, `@ztools/cli`, `@ztools/extension` all build; core builds before its dependents (`^build` ordering).
+Expected: `vtools-core`, `vtools`, `vtools-extension` all build; core builds before its dependents (`^build` ordering).
 
 - [ ] **Step 4: Run all tests through turbo**
 
@@ -748,18 +748,18 @@ Expected: core + cli test tasks pass.
 
 - [ ] **Step 5: Replace README**
 
-Overwrite `/Users/kylan.zhang/me/ztools/README.md`:
+Overwrite `/Users/kylan.zhang/me/vtools/README.md`:
 
 ```markdown
-# ztools
+# vtools
 
 Personal developer tools, available both as a CLI and a Chrome extension.
 
 ## Packages
 
-- `@ztools/core` — shared VS Code Marketplace logic (parse/resolve/build URL).
-- `@ztools/cli` — Ink-based terminal app. Binary: `ztools`.
-- `@ztools/extension` — Chrome new-tab dashboard (Vite + React + Tailwind).
+- `vtools-core` — shared VS Code Marketplace logic (parse/resolve/build URL).
+- `vtools` — Ink-based terminal app. Binary: `vtools`.
+- `vtools-extension` — Chrome new-tab dashboard (Vite + React + Tailwind).
 
 ## Develop
 
@@ -773,17 +773,17 @@ pnpm test               # run tests
 ## CLI
 
 ```sh
-pnpm --filter @ztools/cli build
-node apps/cli/dist/cli.js            # interactive dashboard
-node apps/cli/dist/cli.js vsix esbenp.prettier-vscode
+pnpm --filter vtools build
+node apps/cli/distvtools.js            # interactive dashboard
+node apps/cli/distvtools.js vsix esbenp.prettier-vscode
 ```
 
-To install globally: `cd apps/cli && pnpm link --global` (exposes `ztools`).
+To install globally: `cd apps/cli && pnpm link --global` (exposes `vtools`).
 
 ## Extension
 
 ```sh
-pnpm --filter @ztools/extension build
+pnpm --filter vtools-extension build
 # load apps/extension/dist as an unpacked extension in Chrome
 ```
 ```
@@ -792,7 +792,7 @@ pnpm --filter @ztools/extension build
 
 ```bash
 git add -A
-git commit -m "chore: wire turbo tasks, root scripts, and README for ztools"
+git commit -m "chore: wire turbo tasks, root scripts, and README for vtools"
 ```
 
 ---
@@ -814,9 +814,9 @@ Expected: all three packages build with no errors.
 Run:
 ```bash
 cd apps/cli && pnpm link --global && cd ../..
-ztools --help
+vtools --help
 ```
-Expected: usage block with `$ ztools vsix <extension>`.
+Expected: usage block with `$ vtools vsix <extension>`.
 
 - [ ] **Step 3: Verify type-checking**
 
@@ -830,7 +830,7 @@ Expected: passes for all packages. (If `tsgo`/`@typescript/native-preview` faile
 
 ```bash
 git add -A
-git commit -m "chore: verify ztools monorepo builds end-to-end"
+git commit -m "chore: verify vtools monorepo builds end-to-end"
 ```
 
 ---

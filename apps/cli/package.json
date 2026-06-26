@@ -1,9 +1,15 @@
 {
-  "name": "@ztools/cli",
+  "name": "vtools",
   "version": "0.0.0",
+  "description": "Ink-based terminal app for downloading VS Code extensions (.vsix). Binary: vtools.",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stekovinbranturry/vtools.git",
+    "directory": "apps/cli"
+  },
   "bin": {
-    "ztools": "dist/cli.js"
+    "vtools": "dist/cli.js"
   },
   "type": "module",
   "engines": {
@@ -13,11 +19,11 @@
     "build": "tsdown",
     "dev": "tsdown --watch",
     "check-types": "tsgo --noEmit",
-    "test": "ava"
+    "test": "ava",
+    "prepublishOnly": "pnpm run build"
   },
   "files": ["dist"],
   "dependencies": {
-    "@ztools/core": "workspace:*",
     "@inquirer/prompts": "^8.5.2",
     "chalk": "^5.6.2",
     "ink": "^4.1.0",
@@ -26,7 +32,12 @@
     "ink-text-input": "^5.0.1",
     "meow": "^11.0.0",
     "ora": "^9.4.0",
-    "react": "^18.2.0"
+    "react": "^18.2.0",
+    "vtools-core": "workspace:*"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
   },
   "devDependencies": {
     "@sindresorhus/tsconfig": "^3.0.1",

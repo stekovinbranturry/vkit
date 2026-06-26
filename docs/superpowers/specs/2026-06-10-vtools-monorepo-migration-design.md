@@ -1,36 +1,36 @@
-# ztools Monorepo Migration Design
+# vtools Monorepo Migration Design
 
 Date: 2026-06-10
 Status: Awaiting user review
 
 ## Goal
 
-Migrate two existing projects into the `ztools` Turborepo monorepo and rename everything to `ztools`:
+Migrate two existing projects into the `vtools` Turborepo monorepo and rename everything to `vtools`:
 
-- `my-ink-cli` (Ink CLI, `dev-tools`) → `apps/cli` (`@ztools/cli`)
-- `devtools-newtab` (Vite + React Chrome extension) → `apps/extension` (`@ztools/extension`)
+- `my-ink-cli` (Ink CLI, `dev-tools`) → `apps/cli` (`vtools`)
+- `devtools-newtab` (Vite + React Chrome extension) → `apps/extension` (`vtools-extension`)
 
-Extract shared VSIX logic into a new `packages/core` (`@ztools/core`).
+Extract shared VSIX logic into a new `packages/core` (`vtools-core`).
 
 ## Decisions (confirmed)
 
 - **Shared core**: extract `marketplace.ts` pure logic into `packages/core`; both apps import it.
 - **Scaffold cleanup**: delete `apps/web`, `apps/docs`, `packages/ui`. Keep `packages/typescript-config` and `packages/eslint-config`.
-- **Naming**: scoped packages `@ztools/core`, `@ztools/cli`, `@ztools/extension`; CLI binary command = `ztools`; root package name = `ztools`.
+- **Naming**: scoped packages `vtools-core`, `vtools`, `vtools-extension`; CLI binary command = `vtools`; root package name = `vtools`.
 - **Build tool**: replace `tsc` build with **tsdown** (Rolldown-based) for `core` and `cli`, emitting ESM + `.d.ts`. Extension stays on Vite.
 - **Type-check**: `check-types` task uses **tsgo** (not classic tsc). CLI tests stay on `ava` + `ts-node` for now.
-- **Migration is non-destructive**: copy projects in; leave originals untouched. `git init` the `ztools` repo.
+- **Migration is non-destructive**: copy projects in; leave originals untouched. `git init` the `vtools` repo.
 
 ## Target Structure
 
 ```
-ztools/                          # root package renamed "ztools"
+vtools/                          # root package renamed "vtools"
 ├── turbo.json                   # tasks: build / dev / lint / check-types / test
 ├── pnpm-workspace.yaml          # apps/* + packages/*
 ├── apps/
-│   ├── cli/                     # @ztools/cli (from my-ink-cli)
+│   ├── cli/                     # vtools (from my-ink-cli)
 │   │   ├── source/
-│   │   │   ├── cli.tsx          # bin → `ztools`
+│   │   │   ├── cli.tsx          # bin → `vtools`
 │   │   │   ├── app.tsx
 │   │   │   └── tools/
 │   │   │       ├── Dashboard.tsx
@@ -38,19 +38,19 @@ ztools/                          # root package renamed "ztools"
 │   │   │       └── vsix/
 │   │   │           ├── VsixApp.tsx
 │   │   │           ├── InstallPrompt.tsx
-│   │   │           ├── download.ts        # @ztools/core + Node downloadVsixToFile
+│   │   │           ├── download.ts        # vtools-core + Node downloadVsixToFile
 │   │   │           ├── install.ts
 │   │   │           ├── prompt-install.ts
 │   │   │           └── print-summary.ts
 │   │   ├── tsdown.config.ts
-│   │   └── package.json          # bin: { ztools }, dep @ztools/core
-│   └── extension/                # @ztools/extension (from devtools-newtab)
-│       ├── src/                  # App + tools/vsix/VsixDownloader uses @ztools/core
+│   │   └── package.json          # bin: { vtools }, dep vtools-core
+│   └── extension/                # vtools-extension (from devtools-newtab)
+│       ├── src/                  # App + tools/vsix/VsixDownloader uses vtools-core
 │       ├── public/manifest.json
 │       ├── vite.config.ts
-│       └── package.json          # dep @ztools/core
+│       └── package.json          # dep vtools-core
 └── packages/
-    ├── core/                     # @ztools/core
+    ├── core/                     # vtools-core
     │   ├── src/
     │   │   ├── marketplace.ts     # parse / resolve / buildUrl / buildFilename + types
     │   │   └── index.ts
@@ -60,7 +60,7 @@ ztools/                          # root package renamed "ztools"
     └── eslint-config/            # kept
 ```
 
-## @ztools/core Boundary
+## vtools-core Boundary
 
 Only environment-agnostic logic (works in Node 18+ and browser via global `fetch`):
 
@@ -71,20 +71,20 @@ Only environment-agnostic logic (works in Node 18+ and browser via global `fetch
 | `buildDownloadUrl` / `buildVsixFilename` | `install.ts` / `InstallPrompt` (CLI only) |
 | types `ExtensionRef` / `ResolvedExtension` | UI components |
 
-`@ztools/core` builds with tsdown → `dist/` (ESM) + `.d.ts`; `package.json` `exports` points to dist. CLI consumes compiled output; extension bundles it via Vite.
+`vtools-core` builds with tsdown → `dist/` (ESM) + `.d.ts`; `package.json` `exports` points to dist. CLI consumes compiled output; extension bundles it via Vite.
 
 ## Data Flow
 
 ```
-@ztools/core  (parse → resolve → buildUrl/buildFilename)
+vtools-core  (parse → resolve → buildUrl/buildFilename)
    ├── apps/cli:       core + downloadVsixToFile (Node fs)
    └── apps/extension: core + downloadVsix (chrome.downloads)
 ```
 
 ## Per-App Tooling (minimize migration risk)
 
-- **CLI**: tsdown build; keep `xo` + `ava` + prettier config; bin renamed `ztools`; add dep `@ztools/core: workspace:*`.
-- **Extension**: keep `vite` + tailwind; add dep `@ztools/core: workspace:*`.
+- **CLI**: tsdown build; keep `xo` + `ava` + prettier config; bin renamed `vtools`; add dep `vtools-core: workspace:*`.
+- **Extension**: keep `vite` + tailwind; add dep `vtools-core: workspace:*`.
 - Shared `typescript-config` / `eslint-config` remain available for optional later adoption; not force-applied now.
 
 ## turbo.json
@@ -102,12 +102,12 @@ Only environment-agnostic logic (works in Node 18+ and browser via global `fetch
 
 ## Migration Steps (high level)
 
-1. Rename root `package.json` → `ztools`; delete demo apps/ui.
+1. Rename root `package.json` → `vtools`; delete demo apps/ui.
 2. Create `packages/core` from shared `marketplace.ts`; add tsdown config.
-3. Copy `my-ink-cli` → `apps/cli`; rewrite `download.ts` to import from `@ztools/core`; rename bin → `ztools`; add tsdown config.
-4. Copy `devtools-newtab` → `apps/extension`; rewrite `VsixDownloader`/`marketplace` usage to import from `@ztools/core`.
+3. Copy `my-ink-cli` → `apps/cli`; rewrite `download.ts` to import from `vtools-core`; rename bin → `vtools`; add tsdown config.
+4. Copy `devtools-newtab` → `apps/extension`; rewrite `VsixDownloader`/`marketplace` usage to import from `vtools-core`.
 5. Wire `turbo.json` tasks; `tsgo` for check-types.
-6. `git init`; root `pnpm install`; verify each builds, `ztools` runs, extension `vite build` outputs `dist/`.
+6. `git init`; root `pnpm install`; verify each builds, `vtools` runs, extension `vite build` outputs `dist/`.
 
 ## Out of Scope
 

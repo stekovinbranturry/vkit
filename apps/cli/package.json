@@ -1,7 +1,7 @@
 {
-  "name": "vtools",
-  "version": "0.0.2",
-  "description": "Ink-based terminal app for downloading VS Code extensions (.vsix). Binary: vtools.",
+  "name": "@v-kit/cli",
+  "version": "0.0.0",
+  "description": "Ink-based terminal app for downloading VS Code extensions (.vsix). Binary: vkit.",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -9,7 +9,7 @@
     "directory": "apps/cli"
   },
   "bin": {
-    "vtools": "dist/cli.js"
+    "vkit": "dist/cli.js"
   },
   "type": "module",
   "engines": {
@@ -36,7 +36,7 @@
     "meow": "^11.0.0",
     "ora": "^9.4.0",
     "react": "^18.2.0",
-    "vtools-core": "workspace:*"
+    "@v-kit/core": "workspace:*"
   },
   "publishConfig": {
     "access": "public",

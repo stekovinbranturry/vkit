@@ -3,8 +3,8 @@ export {
   resolveExtension,
   buildDownloadUrl,
   buildVsixFilename,
-} from 'vtools-core';
-export type {ExtensionRef, ResolvedExtension} from 'vtools-core';
+} from '@v-kit/core';
+export type {ExtensionRef, ResolvedExtension} from '@v-kit/core';
 
 /**
  * Triggers the download via chrome.downloads, with an anchor-click dev fallback.

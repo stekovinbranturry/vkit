@@ -16,18 +16,18 @@ import VsixApp from './tools/vsix/VsixApp.js';
 const cli = meow(
 	`
 	Usage
-	  $ vtools
-	  $ vtools vsix <extension>
-	  $ vtools vsix
+	  $ vkit
+	  $ vkit vsix <extension>
+	  $ vkit vsix
 
 	Options
 	  --version  Extension version (default: latest from Marketplace)
 	  --out      Output file or directory (default: ~/Downloads)
 
 	Examples
-	  $ vtools
-	  $ vtools vsix ms-python.python
-	  $ vtools vsix ms-python.python --version 2024.20.0 --out ./extensions/
+	  $ vkit
+	  $ vkit vsix ms-python.python
+	  $ vkit vsix ms-python.python --version 2024.20.0 --out ./extensions/
 `,
 	{
 		importMeta: import.meta,
@@ -46,7 +46,7 @@ const [command, extension] = cli.input;
 
 async function runScriptMode() {
 	if (!extension) {
-		console.error('Usage: vtools vsix <extension>');
+		console.error('Usage: vkit vsix <extension>');
 		process.exit(1);
 	}
 

@@ -1,4 +1,4 @@
-# vtools
+# @v-kit/cli
 
 在终端里安装 VS Code / Cursor 扩展。从 Marketplace 下载 `.vsix`，并一键安装到本地编辑器。
 
@@ -7,7 +7,7 @@
 需要 [Node.js](https://nodejs.org/) 18 或更高版本。
 
 ```bash
-npm install -g vtools
+npm install -g @v-kit/cli
 ```
 
 ## 使用前准备
@@ -22,9 +22,9 @@ npm install -g vtools
 
 ### 交互模式
 
-在终端输入 `vtools` 进入主菜单，选择 **VSIX 安装器**：
+在终端输入 `vkit` 进入主菜单，选择 **VSIX 安装器**：
 
-![vtools 主菜单](https://raw.githubusercontent.com/stekovinbranturry/vtools/main/images/cli-1.png)
+![vkit 主菜单](https://raw.githubusercontent.com/stekovinbranturry/vtools/main/images/cli-1.png)
 
 输入扩展 ID（如 `ms-python.python`）或 Marketplace 链接，按 Enter 开始下载：
 
@@ -40,19 +40,19 @@ npm install -g vtools
 
 ```bash
 # 下载并安装最新版
-vtools vsix ms-python.python
+vkit vsix ms-python.python
 
 # 指定版本
-vtools vsix esbenp.prettier-vscode --version 11.0.0
+vkit vsix esbenp.prettier-vscode --version 11.0.0
 
 # 指定保存目录（默认 ~/Downloads）
-vtools vsix ms-python.python --out ./extensions/
+vkit vsix ms-python.python --out ./extensions/
 ```
 
 仅打开 VSIX 安装器表单（不经过主菜单）：
 
 ```bash
-vtools vsix
+vkit vsix
 ```
 
 ## 快捷键

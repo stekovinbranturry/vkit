@@ -26,6 +26,9 @@ importers:
       '@inquirer/prompts':
         specifier: ^8.5.2
         version: 8.5.2(@types/node@25.9.3)
+      '@v-kit/core':
+        specifier: workspace:*
+        version: link:../../packages/core
       chalk:
         specifier: ^5.6.2
         version: 5.6.2
@@ -50,9 +53,6 @@ importers:
       react:
         specifier: ^18.2.0
         version: 18.3.1
-      vtools-core:
-        specifier: workspace:*
-        version: link:../../packages/core
     devDependencies:
       '@sindresorhus/tsconfig':
         specifier: ^3.0.1
@@ -90,15 +90,15 @@ importers:
 
   apps/extension:
     dependencies:
+      '@v-kit/core':
+        specifier: workspace:*
+        version: link:../../packages/core
       react:
         specifier: ^18.3.1
         version: 18.3.1
       react-dom:
         specifier: ^18.3.1
         version: 18.3.1(react@18.3.1)
-      vtools-core:
-        specifier: workspace:*
-        version: link:../../packages/core
     devDependencies:
       '@tailwindcss/vite':
         specifier: ^4.1.11

@@ -6,7 +6,7 @@ import {
 	resolveExtension,
 	buildDownloadUrl,
 	buildVsixFilename,
-} from 'vtools-core';
+} from '@v-kit/core';
 import {downloadVsixToFile} from '../../lib/download-file.js';
 
 export type DownloadOptions = {

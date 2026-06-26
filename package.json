@@ -1,14 +1,22 @@
 {
-  "name": "ztools",
+  "name": "vtools",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stekovinbranturry/vtools.git"
+  },
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
     "test": "turbo run test",
     "check-types": "turbo run check-types",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "pnpm build && changeset publish"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.29.0",
     "prettier": "^3.7.4",
     "turbo": "^2.9.16",
     "typescript": "5.9.2"

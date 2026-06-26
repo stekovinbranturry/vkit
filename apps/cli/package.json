@@ -1,6 +1,6 @@
 {
   "name": "@v-kit/cli",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Ink-based terminal app for downloading VS Code extensions (.vsix). Binary: vkit.",
   "license": "MIT",
   "repository": {

@@ -1,5 +1,13 @@
 # vtools
 
+## 0.1.1
+
+### Patch Changes
+
+- c3d0bed: 更新 README：精简文档，补充同步功能与升级提示说明。
+- Updated dependencies [c3d0bed]
+  - @v-kit/core@0.1.1
+
 ## 0.1.0
 
 ### Minor Changes

@@ -1,14 +1,11 @@
 import React, {useState} from 'react';
 import {Box, Text, useApp, useInput} from 'ink';
 import SelectInput from 'ink-select-input';
-import Gradient from 'ink-gradient';
-import BigText from 'ink-big-text';
 import {tools} from './registry';
 import VsixApp from './vsix/VsixApp';
 import SyncApp from './sync/SyncApp';
-import {version} from '../version';
+import {Banner} from '../components/Banner';
 import {Divider} from '../../components/ui/divider';
-import {Badge} from '../../components/ui/badge';
 import {KeyHint} from '../../components/ui/key-hint';
 
 const PANEL_WIDTH = 44;
@@ -43,11 +40,21 @@ export default function Dashboard() {
 	});
 
 	if (activeTool === 'vsix-downloader') {
-		return <VsixApp onBack={() => setActiveTool(null)} />;
+		return (
+			<Box flexDirection="column">
+				<Banner />
+				<VsixApp onBack={() => setActiveTool(null)} />
+			</Box>
+		);
 	}
 
 	if (activeTool === 'sync-to-cursor') {
-		return <SyncApp onBack={() => setActiveTool(null)} />;
+		return (
+			<Box flexDirection="column">
+				<Banner />
+				<SyncApp onBack={() => setActiveTool(null)} />
+			</Box>
+		);
 	}
 
 	const items = availableTools.map(tool => ({
@@ -59,15 +66,7 @@ export default function Dashboard() {
 
 	return (
 		<Box flexDirection="column">
-			<Gradient name="vice">
-				<BigText text="vkit" font="block" />
-			</Gradient>
-			<Box marginBottom={1}>
-				<Text dimColor>Your terminal dev toolbox</Text>
-				<Box marginLeft={2}>
-					<Badge variant="info">{`v${version}`}</Badge>
-				</Box>
-			</Box>
+			<Banner />
 			<Divider width={PANEL_WIDTH} />
 			<Box marginTop={1}>
 				<SelectInput

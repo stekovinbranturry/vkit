@@ -3,8 +3,10 @@ import {Box, Text, useInput} from 'ink';
 import Spinner from 'ink-spinner';
 import {findEditorClis, getEditorLabel} from '../vsix/install';
 import {Divider} from '../../../components/ui/divider';
-import {Badge} from '../../../components/ui/badge';
-import {ProgressBar} from '../../../components/ui/progress-bar';
+import {
+	StatusIndicator,
+	type StatusValue,
+} from '../../../components/ui/status-indicator';
 import {KeyHint} from '../../../components/ui/key-hint';
 import {useMultiSelectList} from '../../hooks/useMultiSelectList';
 import {
@@ -20,18 +22,21 @@ const SOURCE = 'code' as const;
 const TARGET = 'cursor' as const;
 const PANEL_WIDTH = 44;
 
+type Phase = 'loading' | 'select' | 'confirm' | 'syncing' | 'error';
+
 function Header() {
 	return (
 		<>
-			<Text bold>同步扩展到 Cursor</Text>
+			<Text bold>同步插件到 Cursor</Text>
 			<Divider width={PANEL_WIDTH} />
 		</>
 	);
 }
 
-// Reserve rows for header/separator/summary/hint so the list never pushes the
-// rest of the UI off a short terminal (which leaves confusing stale frames).
-const CHROME_ROWS = 9;
+// Reserve rows for the persistent banner + header/separator/summary/hint so the
+// list never pushes the rest of the UI off a short terminal (which leaves
+// confusing stale frames). The banner (big text + subtitle) alone is ~8 rows.
+const CHROME_ROWS = 17;
 const MIN_VISIBLE = 4;
 const MAX_VISIBLE = 14;
 const INSTALLED_PREVIEW = 6;
@@ -42,7 +47,14 @@ function getVisibleCount(total: number): number {
 	return Math.max(MIN_VISIBLE, Math.min(total, MAX_VISIBLE, fit));
 }
 
-type Phase = 'loading' | 'select' | 'confirm' | 'syncing' | 'done' | 'error';
+type ItemStatus = 'pending' | 'downloading' | 'success' | 'error';
+
+const ITEM_STATUS_MAP: Record<ItemStatus, StatusValue> = {
+	pending: 'idle',
+	downloading: 'loading',
+	success: 'online',
+	error: 'error',
+};
 
 type Props = {
 	onBack: () => void;
@@ -55,7 +67,9 @@ export default function SyncApp({onBack}: Props) {
 	const [selected, setSelected] = useState<Set<string>>(() => new Set());
 	const [progress, setProgress] = useState({current: 0, total: 0});
 	const [status, setStatus] = useState('');
+	const [itemStatus, setItemStatus] = useState<Record<string, ItemStatus>>({});
 	const [results, setResults] = useState<SyncItemResult[]>([]);
+	const [finished, setFinished] = useState(false);
 
 	// Already-installed extensions are shown separately and are NOT selectable.
 	// Only the missing ones are interactive.
@@ -104,7 +118,7 @@ export default function SyncApp({onBack}: Props) {
 				}
 
 				if (found.length === 0) {
-					setErrorMessage('VS Code 没有检测到已安装的扩展。');
+					setErrorMessage('VS Code 没有检测到已安装的插件。');
 					setPhase('error');
 					return;
 				}
@@ -112,7 +126,7 @@ export default function SyncApp({onBack}: Props) {
 				const missing = found.filter(c => !c.installedInTarget);
 				if (missing.length === 0) {
 					setErrorMessage(
-						`${getEditorLabel(TARGET)} 已拥有 ${getEditorLabel(SOURCE)} 的全部扩展，无需同步。`,
+						`${getEditorLabel(TARGET)} 已拥有 ${getEditorLabel(SOURCE)} 的全部插件，无需同步。`,
 					);
 					setPhase('error');
 					return;
@@ -142,7 +156,11 @@ export default function SyncApp({onBack}: Props) {
 
 	async function runSync() {
 		setPhase('syncing');
+		setFinished(false);
 		setProgress({current: 0, total: chosen.length});
+		setItemStatus(
+			Object.fromEntries(chosen.map(c => [c.id, 'pending' as ItemStatus])),
+		);
 
 		const tmpDir = await createTempDir();
 		const collected: SyncItemResult[] = [];
@@ -152,6 +170,7 @@ export default function SyncApp({onBack}: Props) {
 				const candidate = chosen[i]!;
 				setProgress({current: i + 1, total: chosen.length});
 				setStatus(`正在下载 ${candidate.id} …`);
+				setItemStatus(prev => ({...prev, [candidate.id]: 'downloading'}));
 
 				// eslint-disable-next-line no-await-in-loop
 				const result = await syncExtension(
@@ -161,13 +180,17 @@ export default function SyncApp({onBack}: Props) {
 					message => setStatus(message),
 				);
 				collected.push(result);
+				setItemStatus(prev => ({
+					...prev,
+					[candidate.id]: result.success ? 'success' : 'error',
+				}));
 			}
 		} finally {
 			await cleanupTempDir(tmpDir);
 		}
 
 		setResults(collected);
-		setPhase('done');
+		setFinished(true);
 	}
 
 	const list = useMultiSelectList({
@@ -197,8 +220,16 @@ export default function SyncApp({onBack}: Props) {
 				return;
 			}
 
-			if (phase === 'done' || phase === 'error') {
+			if (phase === 'error') {
 				if (key.return || input === 'q' || key.escape) {
+					onBack();
+				}
+
+				return;
+			}
+
+			if (phase === 'syncing') {
+				if (finished && (key.return || input === 'q' || key.escape)) {
 					onBack();
 				}
 
@@ -226,7 +257,7 @@ export default function SyncApp({onBack}: Props) {
 				<Box marginTop={1}>
 					<Text color="yellow">
 						<Spinner type="dots" /> 正在读取 {getEditorLabel(SOURCE)} 与{' '}
-						{getEditorLabel(TARGET)} 的扩展列表…
+						{getEditorLabel(TARGET)} 的插件列表…
 					</Text>
 				</Box>
 			</Box>
@@ -241,6 +272,9 @@ export default function SyncApp({onBack}: Props) {
 					<Text color="yellow">{errorMessage}</Text>
 				</Box>
 				<Box marginTop={1}>
+					<Divider width={PANEL_WIDTH} />
+				</Box>
+				<Box>
 					<KeyHint keys={[{key: '↵ / q', label: '返回'}]} />
 				</Box>
 			</Box>
@@ -253,9 +287,13 @@ export default function SyncApp({onBack}: Props) {
 			<Box flexDirection="column">
 				<Header />
 				<Box marginTop={1}>
-					<Text>即将安装 </Text>
-					<Badge variant="success">{`${chosen.length} 个插件`}</Badge>
-					<Text> 到 {getEditorLabel(TARGET)}：</Text>
+					<Text>
+						即将安装{' '}
+						<Text color="green" bold>
+							{chosen.length}
+						</Text>{' '}
+						个插件到 {getEditorLabel(TARGET)}：
+					</Text>
 				</Box>
 				<Box marginTop={1} flexDirection="column">
 					{preview.map(candidate => (
@@ -269,6 +307,9 @@ export default function SyncApp({onBack}: Props) {
 					) : null}
 				</Box>
 				<Box marginTop={1}>
+					<Divider width={PANEL_WIDTH} />
+				</Box>
+				<Box>
 					<KeyHint keys={[
 							{key: '↵', label: '确认开始'},
 							{key: 'Esc', label: '返回修改'},
@@ -280,43 +321,69 @@ export default function SyncApp({onBack}: Props) {
 	}
 
 	if (phase === 'syncing') {
-		const pct = progress.total
-			? (progress.current / progress.total) * 100
-			: 0;
-		return (
-			<Box flexDirection="column">
-				<Header />
-				<Box marginTop={1}>
-					<Text color="yellow">
-						<Spinner type="dots" /> 同步中（{progress.current}/{progress.total}）
-					</Text>
-				</Box>
-				<Box marginTop={1}>
-					<ProgressBar value={pct} width={PANEL_WIDTH} />
-				</Box>
-				<Box marginTop={1}>
-					<Text dimColor>{status}</Text>
-				</Box>
-			</Box>
-		);
-	}
-
-	if (phase === 'done') {
 		const succeeded = results.filter(r => r.success);
 		const failed = results.filter(r => !r.success);
 
+		const visible = getVisibleCount(chosen.length);
+		// While running, keep the active item centered. Once finished, anchor to
+		// the top so the completed list reads naturally from the start.
+		const active = Math.max(0, progress.current - 1);
+		let start = finished ? 0 : Math.max(0, active - Math.floor(visible / 2));
+		start = Math.min(start, Math.max(0, chosen.length - visible));
+		const windowItems = chosen.slice(start, start + visible);
+
 		return (
 			<Box flexDirection="column">
 				<Header />
 				<Box marginTop={1}>
-					<Badge variant="success">{`成功 ${succeeded.length}`}</Badge>
-					{failed.length > 0 ? (
-						<Box marginLeft={1}>
-							<Badge variant="error">{`失败 ${failed.length}`}</Badge>
-						</Box>
+					{finished ? (
+						<Text>
+							<Text color="green">✓</Text> 安装完成，成功{' '}
+							<Text color="green" bold>
+								{succeeded.length}
+							</Text>{' '}
+							个
+							{failed.length > 0 ? (
+								<Text>
+									，失败{' '}
+									<Text color="red" bold>
+										{failed.length}
+									</Text>{' '}
+									个
+								</Text>
+							) : null}
+						</Text>
+					) : (
+						<Text>
+							安装中{' '}
+							<Text color="cyan" bold>
+								{progress.current}
+							</Text>
+							/{progress.total}
+						</Text>
+					)}
+				</Box>
+				<Box marginTop={1} flexDirection="column">
+					{start > 0 ? <Text dimColor>↑更多</Text> : null}
+					{windowItems.map(candidate => {
+						const state = itemStatus[candidate.id] ?? 'pending';
+						const label =
+							state === 'downloading' && status
+								? `${candidate.id}  ${status}`
+								: candidate.id;
+						return (
+							<StatusIndicator
+								key={candidate.id}
+								status={ITEM_STATUS_MAP[state]}
+								label={label}
+							/>
+						);
+					})}
+					{start + visible < chosen.length ? (
+						<Text dimColor>↓更多</Text>
 					) : null}
 				</Box>
-				{failed.length > 0 ? (
+				{finished && failed.length > 0 ? (
 					<Box marginTop={1} flexDirection="column">
 						<Text color="red">失败明细：</Text>
 						{failed.map(item => (
@@ -327,9 +394,16 @@ export default function SyncApp({onBack}: Props) {
 						))}
 					</Box>
 				) : null}
-				<Box marginTop={1}>
-					<KeyHint keys={[{key: '↵ / q', label: '返回'}]} />
-				</Box>
+				{finished ? (
+					<>
+						<Box marginTop={1}>
+							<Divider width={PANEL_WIDTH} />
+						</Box>
+						<Box>
+							<KeyHint keys={[{key: '↵ / q', label: '返回'}]} />
+						</Box>
+					</>
+				) : null}
 			</Box>
 		);
 	}
@@ -341,7 +415,13 @@ export default function SyncApp({onBack}: Props) {
 		<Box flexDirection="column">
 			<Header />
 			<Box>
-				<Badge variant="success">{`可同步 ${installable.length}`}</Badge>
+				<Text>
+					可同步{' '}
+					<Text color="green" bold>
+						{installable.length}
+					</Text>{' '}
+					个插件
+				</Text>
 				{hasMoreAbove ? (
 					<Box marginLeft={1}>
 						<Text dimColor>↑更多</Text>
@@ -390,6 +470,9 @@ export default function SyncApp({onBack}: Props) {
 					</Text>
 					/{installable.length}
 				</Text>
+			</Box>
+			<Box marginTop={1}>
+				<Divider width={PANEL_WIDTH} />
 			</Box>
 			<Box>
 				<KeyHint keys={[

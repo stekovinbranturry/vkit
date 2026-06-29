@@ -13,7 +13,7 @@ const PANEL_WIDTH = 40;
 function Header() {
 	return (
 		<>
-			<Text bold>VSIX 安装器</Text>
+			<Text bold>安装 VS Code / Cursor 插件</Text>
 			<Divider width={PANEL_WIDTH} />
 		</>
 	);
@@ -106,7 +106,7 @@ export default function VsixApp({onBack}: Props) {
 			<Header />
 
 			<Box marginTop={1} flexDirection="column">
-				<Text>扩展名称或 Marketplace 链接</Text>
+				<Text>插件名称或 Marketplace 链接</Text>
 				<Text color="cyan">
 					{'> '}
 					{busy ? (
@@ -127,19 +127,26 @@ export default function VsixApp({onBack}: Props) {
 				<Text dimColor>{EXAMPLES.join(' · ')}</Text>
 			</Box>
 
-			<Box marginTop={1}>
-				{busy ? (
+			{busy ? (
+				<Box marginTop={1}>
 					<Text color="yellow">
 						<Spinner type="dots" /> {message || '处理中…'}
 					</Text>
-				) : (
-					<KeyHint keys={[
-							{key: '↵', label: '安装'},
-							{key: 'Esc', label: '返回'},
-						]}
-					/>
-				)}
-			</Box>
+				</Box>
+			) : (
+				<>
+					<Box marginTop={1}>
+						<Divider width={PANEL_WIDTH} />
+					</Box>
+					<Box>
+						<KeyHint keys={[
+								{key: '↵', label: '安装'},
+								{key: 'Esc', label: '返回'},
+							]}
+						/>
+					</Box>
+				</>
+			)}
 
 			{status !== 'idle' && !busy && (
 				<Box marginTop={1}>

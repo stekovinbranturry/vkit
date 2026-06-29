@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import React from 'react';
-import {render} from 'ink';
+import {Box, render} from 'ink';
 import meow from 'meow';
 import ora from 'ora';
 import App from './app';
@@ -13,6 +13,7 @@ import {
 } from './tools/vsix/print-summary';
 import VsixApp from './tools/vsix/VsixApp';
 import SyncApp from './tools/sync/SyncApp';
+import {Banner} from './components/Banner';
 import {checkForUpdates} from './update-check';
 
 const cli = meow(
@@ -93,20 +94,26 @@ if (command === 'vsix') {
 		await runScriptMode();
 	} else {
 		render(
-			<VsixApp
-				onBack={() => {
-					process.exit(0);
-				}}
-			/>,
+			<Box flexDirection="column">
+				<Banner />
+				<VsixApp
+					onBack={() => {
+						process.exit(0);
+					}}
+				/>
+			</Box>,
 		);
 	}
 } else if (command === 'vsix-sync') {
 	render(
-		<SyncApp
-			onBack={() => {
-				process.exit(0);
-			}}
-		/>,
+		<Box flexDirection="column">
+			<Banner />
+			<SyncApp
+				onBack={() => {
+					process.exit(0);
+				}}
+			/>
+		</Box>,
 	);
 } else if (command) {
 	console.error(`Unknown command: ${command}`);

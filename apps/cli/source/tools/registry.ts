@@ -8,15 +8,15 @@ export type ToolDefinition = {
 export const tools: ToolDefinition[] = [
 	{
 		id: 'vsix-downloader',
-		name: 'VSIX 安装器',
+		name: '安装 VS Code / Cursor 插件',
 		description:
-			'输入 VS Code 扩展名称或 Marketplace 链接，安装到 VS Code / Cursor',
+			'输入 VS Code 插件名称或 Marketplace 链接，安装到 VS Code / Cursor',
 		available: true,
 	},
 	{
 		id: 'sync-to-cursor',
 		name: '同步 VS Code 插件到 Cursor',
-		description: '读取 VS Code 已安装扩展，并安装到 Cursor',
+		description: '读取 VS Code 已安装插件，并安装到 Cursor',
 		available: true,
 	},
 	{

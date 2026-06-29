@@ -12,7 +12,7 @@
 
 ### Minor Changes
 
-- 7fd91c1: 新增「同步 VS Code 扩展到 Cursor」命令（`vkit vsix-sync`），交互式选择缺失的扩展并自动下载安装；新增启动时的新版本升级提示（update-notifier）。子进程调用迁移到 execa / which，安装逻辑更健壮。优化主面板：渐变大字标题、功能列表与键盘提示样式。
+- 7fd91c1: 新增「同步 VS Code 插件到 Cursor」命令（`vkit vsix-sync`），交互式选择缺失的插件并自动下载安装；新增启动时的新版本升级提示（update-notifier）。子进程调用迁移到 execa / which，安装逻辑更健壮。优化主面板：渐变大字标题、功能列表与键盘提示样式。
 
 ### Patch Changes
 

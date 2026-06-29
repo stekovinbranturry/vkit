@@ -1,6 +1,7 @@
 import React, {useMemo, useState} from 'react';
 import {Box, Text} from 'ink';
 import Spinner from 'ink-spinner';
+import {Divider} from '../../../components/ui/divider';
 import {KeyHint} from '../../../components/ui/key-hint';
 import {useMultiSelectList} from '../../hooks/useMultiSelectList';
 import {
@@ -92,6 +93,9 @@ export default function InstallPrompt({vsixPath, onDone}: Props) {
 				})}
 			</Box>
 			<Box marginTop={1}>
+				<Divider width={40} />
+			</Box>
+			<Box>
 				<KeyHint
 					keys={[
 						{key: '↑↓', label: '移动'},

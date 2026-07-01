@@ -1,5 +1,16 @@
 # @v-kit/cli
 
+## 0.3.0
+
+### Minor Changes
+
+- 18bf9ec: 新增「查看管理 Node 端口」工具：列出 macOS 上 node 进程的 TCP 监听端口，支持过滤、Table 展示、选中高亮与 Confirm 确认后关闭占用进程。
+
+### Patch Changes
+
+- Updated dependencies [18bf9ec]
+  - @v-kit/core@0.3.0
+
 ## 0.2.0
 
 ### Minor Changes
